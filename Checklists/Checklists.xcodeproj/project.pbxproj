@@ -13,6 +13,7 @@
 		266CB9562A007868009A6C7E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 266CB9542A007868009A6C7E /* Main.storyboard */; };
 		266CB9582A00786B009A6C7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 266CB9572A00786B009A6C7E /* Assets.xcassets */; };
 		266CB95B2A00786B009A6C7E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 266CB9592A00786B009A6C7E /* LaunchScreen.storyboard */; };
+		26C433572A01CCE100D8BAD4 /* CheckListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C433562A01CCE100D8BAD4 /* CheckListItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		266CB9572A00786B009A6C7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		266CB95A2A00786B009A6C7E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		266CB95C2A00786B009A6C7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		26C433562A01CCE100D8BAD4 /* CheckListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				266CB94E2A007868009A6C7E /* AppDelegate.swift */,
 				266CB9502A007868009A6C7E /* SceneDelegate.swift */,
+				26C433562A01CCE100D8BAD4 /* CheckListItem.swift */,
 				266CB9522A007868009A6C7E /* CheckListsViewController.swift */,
 				266CB9542A007868009A6C7E /* Main.storyboard */,
 				266CB9572A00786B009A6C7E /* Assets.xcassets */,
@@ -141,6 +144,7 @@
 				266CB9532A007868009A6C7E /* CheckListsViewController.swift in Sources */,
 				266CB94F2A007868009A6C7E /* AppDelegate.swift in Sources */,
 				266CB9512A007868009A6C7E /* SceneDelegate.swift in Sources */,
+				26C433572A01CCE100D8BAD4 /* CheckListItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
