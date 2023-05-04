@@ -7,11 +7,19 @@
 
 import UIKit
 
+protocol AddItemViewControllerDelegate: AnyObject {
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
+    func addItemViewController(_ controller: AddItemViewController, item: CheckListItem)
+}
+
 final class AddItemViewController: UITableViewController {
     
     // MARK: - IBOutlets
     @IBOutlet private weak var textField: UITextField!
     @IBOutlet weak var doneButton: UIBarButtonItem!
+    
+    // MARK: - Properties
+    weak var delegate: AddItemViewControllerDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -25,12 +33,13 @@ final class AddItemViewController: UITableViewController {
     
     // MARK: - Actions
     @IBAction func cancel(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        delegate?.addItemViewControllerDidCancel(self)
     }
     
     @IBAction func done(_ sender: Any) {
-        print("\(textField.text ?? "")")
-        navigationController?.popViewController(animated: true)
+        var item = CheckListItem()
+        item.text = textField.text ?? ""
+        delegate?.addItemViewController(self, item: item)
     }
     
     // MARK: - TableView Delegates

@@ -46,6 +46,14 @@ final class CheckListsViewController: UITableViewController {
         cell.accessoryType = isChecked ? .checkmark : .none
     }
 
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddItem" {
+            guard let controller = segue.destination as? AddItemViewController else { return }
+            controller.delegate = self
+        }
+    }
+    
     // MARK: - TableView DataSource
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
@@ -73,8 +81,23 @@ final class CheckListsViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView,
+                            commit editingStyle: UITableViewCell.EditingStyle,
+                            forRowAt indexPath: IndexPath) {
         items.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+}
+
+extension CheckListsViewController: AddItemViewControllerDelegate {
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, item: CheckListItem) {
+        let newRowIndex = items.count
+        items.append(item)
+        tableView.insertRows(at: [IndexPath(row: newRowIndex, section: 0)], with: .automatic)
+        navigationController?.popViewController(animated: true)
     }
 }

@@ -64,7 +64,7 @@
                     <navigationItem key="navigationItem" title="Checklists" id="6o4-Ny-VZD">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="MEP-38-gmB">
                             <connections>
-                                <segue destination="eGz-WI-FJz" kind="show" id="pb0-5C-HWG"/>
+                                <segue destination="eGz-WI-FJz" kind="show" identifier="AddItem" id="pb0-5C-HWG"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
