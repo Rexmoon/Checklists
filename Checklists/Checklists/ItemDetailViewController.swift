@@ -7,23 +7,30 @@
 
 import UIKit
 
-protocol AddItemViewControllerDelegate: AnyObject {
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
-    func addItemViewController(_ controller: AddItemViewController, item: CheckListItem)
+protocol ItemDetailViewControllerDelegate: AnyObject {
+    func addItemViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func addItemViewController(_ controller: ItemDetailViewController, item: CheckListItem)
+    func addItemViewController(_ controller: ItemDetailViewController, didFinishEditing item: CheckListItem)
 }
 
-final class AddItemViewController: UITableViewController {
+final class ItemDetailViewController: UITableViewController {
     
     // MARK: - IBOutlets
     @IBOutlet private weak var textField: UITextField!
-    @IBOutlet weak var doneButton: UIBarButtonItem!
+    @IBOutlet private weak var doneButton: UIBarButtonItem!
     
     // MARK: - Properties
-    weak var delegate: AddItemViewControllerDelegate?
+    weak var delegate: ItemDetailViewControllerDelegate?
+    
+    var itemToEdit: CheckListItem?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let itemToEdit {
+            title = "Edit Item"
+            textField.text = itemToEdit.text
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -37,9 +44,14 @@ final class AddItemViewController: UITableViewController {
     }
     
     @IBAction func done(_ sender: Any) {
-        var item = CheckListItem()
-        item.text = textField.text ?? ""
-        delegate?.addItemViewController(self, item: item)
+        if var itemToEdit {
+            itemToEdit.text = textField.text!
+            delegate?.addItemViewController(self, didFinishEditing: itemToEdit)
+        } else {
+            var item = CheckListItem()
+            item.text = textField.text ?? ""
+            delegate?.addItemViewController(self, item: item)
+        }
     }
     
     // MARK: - TableView Delegates
@@ -49,7 +61,7 @@ final class AddItemViewController: UITableViewController {
 }
 
 // MARK: UITextField Delegates
-extension AddItemViewController: UITextFieldDelegate {
+extension ItemDetailViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
