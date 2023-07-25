@@ -10,11 +10,13 @@ import UIKit
 final class CheckListsViewController: UITableViewController {
     // MARK: - Properties
     var items = [CheckListItem]()
+    var checkList: CheckList = .init()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .never
+        title = checkList.name
         loadCheckListItems()
     }
 
