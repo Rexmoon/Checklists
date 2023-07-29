@@ -8,8 +8,9 @@
 import UIKit
 
 final class CheckListsViewController: UITableViewController {
+    
     // MARK: - Properties
-    var items = [CheckListItem]()
+    
     var checkList: CheckList = .init()
 
     // MARK: - Lifecycle
@@ -17,7 +18,6 @@ final class CheckListsViewController: UITableViewController {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         title = checkList.name
-        loadCheckListItems()
     }
 
     // MARK: - Functions
@@ -40,39 +40,36 @@ final class CheckListsViewController: UITableViewController {
         } else if segue.identifier == "EditItem" {
             controller.delegate = self
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                controller.itemToEdit = items[indexPath.row]
+                controller.itemToEdit = checkList.items[indexPath.row]
             }
         }
     }
     
     // MARK: - TableView DataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        items.count
+        checkList.items.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CheckListItemCell", for: indexPath)
 
-        configureText(for: cell, with: items[indexPath.row])
-        configureCheckmark(for: cell, with: items[indexPath.row])
-        saveCheckListItems()
+        configureText(for: cell, with: checkList.items[indexPath.row])
+        configureCheckmark(for: cell, with: checkList.items[indexPath.row])
         return cell
     }
 
     // MARK: - TableView Delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
-            items[indexPath.row].checked.toggle()
-            configureCheckmark(for: cell, with: items[indexPath.row])
+            checkList.items[indexPath.row].checked.toggle()
+            configureCheckmark(for: cell, with: checkList.items[indexPath.row])
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
-        saveCheckListItems()
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        items.remove(at: indexPath.row)
-        saveCheckListItems()
+        checkList.items.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
 }
@@ -84,61 +81,21 @@ extension CheckListsViewController: ItemDetailViewControllerDelegate {
     }
     
     func addItemViewController(_ controller: ItemDetailViewController, item: CheckListItem) {
-        let newRowIndex = items.count
-        items.append(item)
+        let newRowIndex = checkList.items.count
+        checkList.items.append(item)
         tableView.insertRows(at: [IndexPath(row: newRowIndex, section: 0)], with: .automatic)
-        saveCheckListItems()
         navigationController?.popViewController(animated: true)
     }
     
     func addItemViewController(_ controller: ItemDetailViewController, didFinishEditing item: CheckListItem) {
         guard
-            let index = items.firstIndex(where: { $0.id == item.id }),
+            let index = checkList.items.firstIndex(where: { $0.id == item.id }),
             let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
         else {
             return
         }
-        items[index] = item
+        checkList.items[index] = item
         configureText(for: cell, with: item)
-        saveCheckListItems()
         navigationController?.popViewController(animated: true)
-    }
-}
-
-// MARK: - Data Persistence
-
-extension CheckListsViewController {
-    public func documentsDirectory() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    }
-    
-    public func dataFilePath() -> URL {
-        return documentsDirectory().appending(path: "Checklist.plist")
-    }
-    
-    private func saveCheckListItems() {
-        let encoder = PropertyListEncoder()
-        do {
-            let dataToEncode = try encoder.encode(items)
-            try dataToEncode.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
-            debugPrint("\(items) saved succefully!")
-        } catch {
-            print("Encoding Error")
-        }
-    }
-    
-    private func loadCheckListItems() {
-        let decoder = PropertyListDecoder()
-        do {
-            guard
-                let data = try? Data(contentsOf: dataFilePath())
-            else {
-                print("No data found!")
-                return
-            }
-            items = try decoder.decode([CheckListItem].self, from: data)
-        } catch {
-            print(error)
-        }
     }
 }

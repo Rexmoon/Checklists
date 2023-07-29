@@ -44,7 +44,7 @@ final class ListDetailViewController: UITableViewController {
     @IBAction private func done() {
         if var checklistToEdit {
             checklistToEdit.name = textField.text!
-            delegate?.listDetailViewController(self, didFinishAdding: checklistToEdit)
+            delegate?.listDetailViewController(self, didFinishEditing: checklistToEdit)
         } else {
             let checklist = CheckList(name: textField.text!)
             delegate?.listDetailViewController(self, didFinishAdding: checklist)

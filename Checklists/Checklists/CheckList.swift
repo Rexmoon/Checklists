@@ -7,9 +7,10 @@
 
 import UIKit
 
-struct CheckList: Equatable, Identifiable {
-    let id = UUID()
+struct CheckList: Codable, Equatable, Identifiable {
+    var id = UUID()
     var name: String
+    var items: [CheckListItem] = []
     
     init(name: String = "Name") {
         self.name = name

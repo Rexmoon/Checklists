@@ -11,7 +11,7 @@ final class AllListViewController: UITableViewController {
 
     let cellIdentifier: String = "CheckListCellIdentifier"
     
-    private var lists = Array<CheckList>()
+    var dataModel: DataModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,10 +21,6 @@ final class AllListViewController: UITableViewController {
     private func setUI() {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Checklists"
-        
-        (1...10).forEach { index in
-            lists.append(CheckList(name: "List Number \(index)"))
-        }
     }
     
     private func setUpTableView() {
@@ -55,21 +51,21 @@ final class AllListViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        lists.count
+        dataModel.lists.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.textLabel?.text = lists[indexPath.row].name
+        cell.textLabel?.text = dataModel.lists[indexPath.row].name
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showCheckLists", sender: lists[indexPath.row])
+        performSegue(withIdentifier: "showCheckLists", sender: dataModel.lists[indexPath.row])
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        lists.remove(at: indexPath.row)
+        dataModel.lists.remove(at: indexPath.row)
         tableView.reloadData()
     }
     
@@ -81,7 +77,7 @@ final class AllListViewController: UITableViewController {
         }
         
         controller.delegate = self
-        controller.checklistToEdit = lists[indexPath.row]
+        controller.checklistToEdit = dataModel.lists[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)
     }
 }
@@ -94,20 +90,15 @@ extension AllListViewController: ListDetailViewControllerDelegate {
     }
     
     func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: CheckList) {
-        guard let index = lists.firstIndex(where: { $0.id == checklist.id }) else { return }
-        lists[index] = checklist
+        dataModel.lists.append(checklist)
         tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }
     
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: CheckList) {
-        guard
-            let index = lists.firstIndex(where: { $0.id == checklist.id }),
-            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
-        else {
-            return
-        }
-        cell.textLabel?.text = checklist.name
+        guard let index = dataModel.lists.firstIndex(where: { $0.id == checklist.id }) else { return }
+        dataModel.lists[index] = checklist
+        tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }
 }
